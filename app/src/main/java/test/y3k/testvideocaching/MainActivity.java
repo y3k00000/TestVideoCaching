@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean handleMessage(Message msg) {
             this.cachedSize += msg.arg1;
             Log.d("video", "cached Size = " + this.cachedSize);
-            if(!inited&&(cachedSize>(2*1024*1024)||msg.what==1)) {
+            if(!inited&&(cachedSize>(8*1024*1024)||msg.what==1)) {
                 videoView.setVideoPath(videoCache.getPath());
                 videoView.start();
                 inited = true;
