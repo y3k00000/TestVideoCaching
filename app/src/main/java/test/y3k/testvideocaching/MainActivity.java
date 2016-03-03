@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     VideoView videoView;
     File videoCache;
 
-    final static String URL = "";
+    final static String URL = "http://www.cmoremap.com.tw/askey_adv/video_10.mp4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                         httpURLConnection.setDoInput(true);
                         httpURLConnection.getResponseCode();
                         InputStream inputStream = httpURLConnection.getInputStream();
-                        byte[] buffer = new byte[2*1024*1024];
+                        byte[] buffer = new byte[1024*1024];
                         int readCount;
                         FileOutputStream fileOutputStream = new FileOutputStream(videoCache);
                         while((readCount=inputStream.read(buffer))>0){
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean handleMessage(Message msg) {
             this.cachedSize += msg.what;
             Log.d("video", "cached Size = "+this.cachedSize);
-            if(!inited&&cachedSize>(4*1024*1024)) {
+            if(!inited&&cachedSize>(2*1024*1024)) {
                 videoView.setVideoPath(videoCache.getPath());
                 videoView.start();
                 inited = true;
