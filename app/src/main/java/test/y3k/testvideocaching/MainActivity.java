@@ -41,11 +41,16 @@ public class MainActivity extends AppCompatActivity {
                         byte[] buffer = new byte[1024*1024];
                         int readCount;
                         FileOutputStream fileOutputStream = new FileOutputStream(videoCache);
+                        Message message;
                         while((readCount=inputStream.read(buffer))>0){
                             fileOutputStream.write(buffer,0,readCount);
-                            handler.sendEmptyMessage(readCount);
+                            message = new Message();
+                            message.what = 0;
+                            message.arg1 = readCount;
+                            handler.sendMessage(message);
                         }
                         fileOutputStream.close();
+                        handler.sendEmptyMessage(1);
                     } catch (IOException e){
                         e.printStackTrace();
                     }
@@ -81,15 +86,12 @@ public class MainActivity extends AppCompatActivity {
         boolean inited = false;
         @Override
         public boolean handleMessage(Message msg) {
-            this.cachedSize += msg.what;
-            Log.d("video", "cached Size = "+this.cachedSize);
-            if(!inited&&cachedSize>(2*1024*1024)) {
+            this.cachedSize += msg.arg1;
+            Log.d("video", "cached Size = " + this.cachedSize);
+            if(!inited&&(cachedSize>(2*1024*1024)||msg.what==1)) {
                 videoView.setVideoPath(videoCache.getPath());
                 videoView.start();
                 inited = true;
-            }
-            else if(inited){
-                Log.d("video", "videoView Buffered Percantage = "+videoView.getBufferPercentage());
             }
             return true;
         }
